@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>윤파머의 초록빛 우당탕탕 팜스토리 | 도시농업 & 직거래 마켓</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        farm: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            accent: '#eab308'
+                        },
+                        naver: '#03C75A'
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                        hand: ['"Gaegu"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f7faf7;
+            color: #1f2937;
+        }
+        .handwriting {
+            font-family: 'Gaegu', cursive;
+        }
+        .smooth-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .smartstore-gradient {
+            background: linear-gradient(135deg, #03C75A 0%, #029a45 100%);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #86efac;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #22c55e;
+        }
+    </style>
+</head>
+<body class="bg-emerald-50/30 text-gray-800 min-h-screen flex flex-col justify-between selection:bg-farm-200">
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 bg-gray-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-gray-700">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-farm-400 text-lg"></i>
+        <span id="toast-msg" class="text-sm font-medium">처리되었습니다.</span>
+    </div>
+
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-emerald-100 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <a href="#" onclick="showSection('home')" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-2xl bg-farm-500 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-seedling text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold text-gray-900 tracking-tight leading-none group-hover:text-farm-600 transition-colors">
+                        윤파머의 초록빛 팜스토리
+                    </h1>
+                    <span class="text-xs text-farm-600 font-semibold tracking-wider">도시농업 & 직거래 마켓</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 bg-emerald-50/80 p-1.5 rounded-full border border-emerald-100">
+                <button onclick="showSection('home')" id="nav-home" class="nav-btn active px-4 py-1.5 rounded-full text-xs font-semibold text-farm-800 bg-white shadow-sm transition-all">
+                    <i class="fa-solid fa-house mr-1.5"></i>메인 홈
+                </button>
+                <button onclick="showSection('market')" id="nav-market" class="nav-btn px-4 py-1.5 rounded-full text-xs font-semibold text-gray-600 hover:text-farm-700 transition-all">
+                    <i class="fa-solid fa-store mr-1.5"></i>직거래 마켓
+                </button>
+                <button onclick="showSection('story')" id="nav-story" class="nav-btn px-4 py-1.5 rounded-full text-xs font-semibold text-gray-600 hover:text-farm-700 transition-all">
+                    <i class="fa-solid fa-book-open mr-1.5"></i>우당탕탕 영농일기
+                </button>
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2">
+                <a href="https://smartstore.naver.com/aurumcoop" target="_blank" rel="noopener noreferrer" 
+                   class="smartstore-gradient text-white text-xs sm:text-sm font-bold px-3.5 py-2 rounded-xl shadow-md hover:shadow-lg hover:brightness-105 transition-all flex items-center gap-1.5">
+                    <span class="bg-white text-naver px-1.5 py-0.5 rounded text-[10px] font-black">N</span>
+                    <span>아우룸 그린케어팜</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-0.5 opacity-80"></i>
+                </a>
+                
+                <button onclick="openAdminModal()" class="p-2 text-gray-500 hover:text-farm-700 hover:bg-emerald-50 rounded-xl transition-all" title="관리자 센터 (프로필 & 상품 관리)">
+                    <i class="fa-solid fa-gear text-lg"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Bottom Tab Bar -->
+        <div class="md:hidden flex border-t border-emerald-100 bg-white">
+            <button onclick="showSection('home')" class="flex-1 py-2 text-center text-xs font-medium text-farm-600 border-b-2 border-farm-500">
+                <i class="fa-solid fa-house block text-base mb-0.5"></i>홈
+            </button>
+            <button onclick="showSection('market')" class="flex-1 py-2 text-center text-xs font-medium text-gray-500">
+                <i class="fa-solid fa-store block text-base mb-0.5"></i>직거래 마켓
+            </button>
+            <button onclick="showSection('story')" class="flex-1 py-2 text-center text-xs font-medium text-gray-500">
+                <i class="fa-solid fa-book-open block text-base mb-0.5"></i>영농일기
+            </button>
+            <button onclick="openAdminModal()" class="flex-1 py-2 text-center text-xs font-medium text-gray-500">
+                <i class="fa-solid fa-user-gear block text-base mb-0.5"></i>관리자
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow space-y-8">
+
+        <!-- HERO BANNER -->
+        <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-farm-800 via-farm-700 to-emerald-900 text-white p-6 sm:p-10 shadow-xl border border-emerald-600/30">
+            <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none">
+                <i class="fa-solid fa-tractor text-[240px]"></i>
+            </div>
+            
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-medium text-emerald-200 border border-white/20 mb-4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>100% 무농약 친환경 도심형 감성농장</span>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-3">
+                    오늘 수확한 <span class="text-emerald-300">초록빛 싱그러움</span>을<br class="hidden sm:inline"> 식탁까지 그대로 전합니다!
+                </h2>
+                <p class="text-emerald-100 text-xs sm:text-base leading-relaxed mb-6 font-light">
+                    윤파머가 구슬땀 흘려 직접 재배한 프레시 허브, 샐러드 쌈채소, 열매채소를 스마트스토어에서 손쉽게 구입해보세요.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <a href="https://smartstore.naver.com/aurumcoop" target="_blank" rel="noopener noreferrer" 
+                       class="smartstore-gradient hover:brightness-110 text-white font-bold px-5 py-3 rounded-2xl shadow-lg transition-all flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>아우룸 그린케어팜 스마트스토어 가기</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </a>
+                    <button onclick="showSection('market')" class="bg-white/15 hover:bg-white/25 text-white font-semibold px-4 py-3 rounded-2xl backdrop-blur-md transition-all text-sm">
+                        수확 작물 둘러보기
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROFILE CARD SECTION -->
+        <section class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-emerald-100 relative">
+            <div class="flex flex-col md:flex-row gap-6 items-center md:items-start">
+                
+                <!-- Profile Image Display with Status Badge -->
+                <div class="relative flex-shrink-0 group">
+                    <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-3xl overflow-hidden border-4 border-emerald-100 shadow-md bg-emerald-50 relative">
+                        <img id="display-profile-img" src="https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=400&q=80" alt="윤파머 프로필" class="w-full h-full object-cover">
+                    </div>
+                    <button onclick="openAdminModal()" class="absolute -bottom-2 -right-2 bg-white text-farm-700 border border-emerald-200 shadow-md p-2 rounded-xl text-xs font-bold hover:bg-emerald-50 transition-all flex items-center gap-1" title="프로필 변경">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>사진변경</span>
+                    </button>
+                </div>
+
+                <!-- Profile Info Display -->
+                <div class="flex-grow text-center md:text-left space-y-2">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                        <div>
+                            <div class="flex items-center justify-center md:justify-start gap-2">
+                                <h3 id="display-farmer-name" class="text-2xl font-bold text-gray-900">윤파머 (지수)</h3>
+                                <span class="bg-emerald-100 text-farm-800 text-xs px-2.5 py-0.5 rounded-full font-bold">대표 농부</span>
+                            </div>
+                            <p id="display-farm-title" class="text-xs sm:text-sm text-farm-600 font-semibold mt-0.5">
+                                도심 속 힐링 농장 & 직거래 그린 케어
+                            </p>
+                        </div>
+
+                        <!-- Quick Admin Button -->
+                        <button onclick="openAdminModal()" class="self-center md:self-auto text-xs font-semibold px-4 py-2 bg-emerald-50 text-farm-700 hover:bg-emerald-100 rounded-xl transition-all border border-emerald-200/60 flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>프로필 & 내용 수정</span>
+                        </button>
+                    </div>
+
+                    <p id="display-farmer-bio" class="text-gray-600 text-sm leading-relaxed pt-2 border-t border-gray-100">
+                        안녕하세요! 도심에서 초록빛 신선함을 기르는 윤파머입니다. 직접 키운 건강하고 무농약 채소들을 여러분의 식탁 위에 전달해 드리고 있습니다. 우당탕탕 농사 라이프와 신선한 직거래 소식을 전해드려요!
+                    </p>
+
+                    <!-- Profile Quick Stats / Highlights -->
+                    <div class="grid grid-cols-3 gap-3 pt-3">
+                        <div class="bg-emerald-50/50 p-2.5 rounded-2xl text-center border border-emerald-100/50">
+                            <span class="block text-xs text-gray-500 font-medium">농장 위치</span>
+                            <span id="display-farm-location" class="text-xs sm:text-sm font-bold text-farm-800">경기도 파주시</span>
+                        </div>
+                        <div class="bg-emerald-50/50 p-2.5 rounded-2xl text-center border border-emerald-100/50">
+                            <span class="block text-xs text-gray-500 font-medium">재배 방식</span>
+                            <span class="text-xs sm:text-sm font-bold text-farm-800">100% 무농약</span>
+                        </div>
+                        <div class="bg-emerald-50/50 p-2.5 rounded-2xl text-center border border-emerald-100/50">
+                            <span class="block text-xs text-gray-500 font-medium">공식 스토어</span>
+                            <a href="https://smartstore.naver.com/aurumcoop" target="_blank" class="text-xs sm:text-sm font-bold text-naver underline hover:opacity-80">아우룸 그린케어팜</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CROPS MARKET SECTION -->
+        <section id="section-market" class="space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                <div>
+                    <div class="flex items-center gap-2 text-farm-600 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-store"></i>
+                        <span>Direct Farm Market</span>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-gray-900">
+                        🌱 윤파머 수확 작물 & 직거래 파밍
+                    </h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                        원하시는 작물을 클릭하시면 네이버 스마트스토어 <strong class="text-naver">"아우룸 그린케어팜"</strong> 구매 페이지로 바로 이동합니다!
+                    </p>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+                    <button onclick="filterCrops('all')" class="crop-filter active bg-farm-600 text-white text-xs font-semibold px-3 py-1.5 rounded-xl shadow-sm transition-all whitespace-nowrap">전체 보기</button>
+                    <button onclick="filterCrops('herb')" class="crop-filter bg-white text-gray-600 border border-gray-200 text-xs font-semibold px-3 py-1.5 rounded-xl hover:bg-emerald-50 transition-all whitespace-nowrap">쌈채소 & 허브</button>
+                    <button onclick="filterCrops('fruit')" class="crop-filter bg-white text-gray-600 border border-gray-200 text-xs font-semibold px-3 py-1.5 rounded-xl hover:bg-emerald-50 transition-all whitespace-nowrap">열매채소</button>
+                    <button onclick="filterCrops('special')" class="crop-filter bg-white text-gray-600 border border-gray-200 text-xs font-semibold px-3 py-1.5 rounded-xl hover:bg-emerald-50 transition-all whitespace-nowrap">기획/세트</button>
+                </div>
+            </div>
+
+            <!-- Crops Grid -->
+            <div id="crops-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Javascript will dynamically populate crops here -->
+            </div>
+        </section>
+
+        <!-- FARM JOURNAL / STORY SECTION -->
+        <section id="section-story" class="space-y-6 pt-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="flex items-center gap-2 text-farm-600 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-newspaper"></i>
+                        <span>Farm Journal</span>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-extrabold text-gray-900">
+                        📖 우당탕탕 윤파머 영농일기
+                    </h3>
+                </div>
+                <button onclick="openBlogModal()" class="text-xs font-bold text-farm-700 bg-emerald-100 hover:bg-emerald-200 px-3.5 py-2 rounded-xl transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-plus"></i> 일기 쓰기
+                </button>
+            </div>
+
+            <div id="journal-posts" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Javascript will populate farm story posts here -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-emerald-100 mt-16 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-xs text-gray-500">
+            <div>
+                <p class="font-bold text-gray-700 text-sm">윤파머의 초록빛 우당탕탕 팜스토리</p>
+                <p class="mt-1">공식 네이버 스마트스토어: <a href="https://smartstore.naver.com/aurumcoop" target="_blank" class="text-naver font-bold underline">아우룸 그린케어팜</a></p>
+                <p class="mt-0.5">상담 및 직거래 문의: 카카오톡 @윤파머스토리 | 010-0000-0000</p>
+            </div>
+            <div class="text-gray-400">
+                <p>&copy; 2026 Yoon Farmer & Aurum Green Care Farm. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ADMIN MODAL (PROFILE & CONTENTS EDIT) -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden border border-emerald-100 my-8">
+            
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-farm-700 to-farm-800 text-white p-5 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-user-gear text-xl"></i>
+                    <h3 class="font-bold text-lg">윤파머 관리자 - 프로필 & 내용 수정</h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form Body -->
+            <form id="admin-form" onsubmit="handleSaveProfile(event)" class="p-6 space-y-5">
+                
+                <!-- Profile Image Upload Section -->
+                <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100 space-y-3">
+                    <label class="block text-xs font-bold text-farm-900 uppercase tracking-wider">
+                        <i class="fa-solid fa-image mr-1"></i> 프로필 사진 변경
+                    </label>
+                    
+                    <div class="flex items-center gap-4">
+                        <!-- Preview Box -->
+                        <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-emerald-300 bg-white shadow-sm flex-shrink-0">
+                            <img id="admin-preview-img" src="" alt="미리보기" class="w-full h-full object-cover">
+                        </div>
+
+                        <div class="flex-grow space-y-2">
+                            <input type="file" id="admin-img-file" accept="image/*" onchange="previewImageFile(event)" class="hidden">
+                            <div class="flex gap-2">
+                                <label for="admin-img-file" class="cursor-pointer bg-farm-600 hover:bg-farm-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all shadow-sm flex items-center gap-1">
+                                    <i class="fa-solid fa-upload"></i> 내 컴퓨터에서 사진 선택
+                                </label>
+                            </div>
+                            <p class="text-[11px] text-gray-500">
+                                * 사진을 변경하신 후 하단의 <strong>[저장하기]</strong> 버튼을 꼭 눌러주세요.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-gray-600 font-semibold mb-1">또는 이미지 URL 직접 입력</label>
+                        <input type="text" id="admin-img-url" oninput="updatePreviewFromUrl(this.value)" placeholder="https://..." class="w-full text-xs px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:border-farm-500 bg-white">
+                    </div>
+                </div>
+
+                <!-- Farmer Info Inputs -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">농부 이름</label>
+                        <input type="text" id="admin-farmer-name" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-farm-500 font-semibold">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">농장 타이틀/수식어</label>
+                        <input type="text" id="admin-farm-title" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-farm-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">농장 위치</label>
+                    <input type="text" id="admin-farm-location" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-farm-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">소개글 & 인사말</label>
+                    <textarea id="admin-farmer-bio" rows="3" required class="w-full text-sm p-3.5 rounded-xl border border-gray-200 focus:outline-none focus:border-farm-500 resize-none leading-relaxed"></textarea>
+                </div>
+
+                <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs text-gray-600 flex items-center justify-between">
+                    <span class="font-medium"><i class="fa-solid fa-link text-naver mr-1"></i> 연결 스마트스토어:</span>
+                    <span class="font-bold text-naver">아우룸 그린케어팜 (smartstore.naver.com/aurumcoop)</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+                    <button type="button" onclick="closeAdminModal()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-100 transition-all">
+                        취소
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl text-xs font-bold bg-farm-600 hover:bg-farm-700 text-white shadow-lg transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>저장하기</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CROP SMARTSTORE REDIRECT MODAL -->
+    <div id="crop-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border border-emerald-100 animate-in fade-in zoom-in duration-200">
+            <div class="relative h-48 bg-emerald-100 overflow-hidden">
+                <img id="crop-modal-img" src="" alt="작물 사진" class="w-full h-full object-cover">
+                <button onclick="closeCropModal()" class="absolute top-3 right-3 bg-black/40 text-white hover:bg-black/60 p-2 rounded-full backdrop-blur-md transition-all">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+                <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
+                    <span id="crop-modal-badge">100% 무농약</span>
+                </div>
+            </div>
+
+            <div class="p-6 space-y-4">
+                <div>
+                    <h3 id="crop-modal-title" class="text-xl font-extrabold text-gray-900">작물 이름</h3>
+                    <p id="crop-modal-desc" class="text-xs text-gray-600 mt-1 leading-relaxed">작물 설명이 들어갑니다.</p>
+                </div>
+
+                <div class="flex items-center justify-between bg-emerald-50/70 p-3.5 rounded-2xl border border-emerald-100">
+                    <span class="text-xs text-gray-500 font-medium">직거래 판매가</span>
+                    <span id="crop-modal-price" class="text-lg font-black text-farm-700">0,000원</span>
+                </div>
+
+                <div class="bg-green-50 p-3 rounded-xl border border-green-200 text-xs text-emerald-800 space-y-1">
+                    <p class="font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-circle-check text-naver"></i> 네이버 스마트스토어 연동 안내
+                    </p>
+                    <p class="text-[11px] text-gray-600">
+                        [구매하기] 버튼을 누르시면 네이버 스마트스토어 <strong class="text-naver">"아우룸 그린케어팜"</strong>의 안전한 결제 페이지로 이동합니다.
+                    </p>
+                </div>
+
+                <a id="crop-modal-smartstore-link" href="https://smartstore.naver.com/aurumcoop" target="_blank" rel="noopener noreferrer"
+                   class="smartstore-gradient text-white w-full py-3.5 rounded-2xl font-bold text-center block shadow-lg hover:brightness-105 transition-all text-sm">
+                    <i class="fa-solid fa-cart-shopping mr-1.5"></i>
+                    아우룸 그린케어팜에서 바로 구매하기
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SMARTSTORE_URL = "https://smartstore.naver.com/aurumcoop";
+
+        // Initial Default Profile Data
+        const defaultProfile = {
+            farmerName: "윤파머 (지수)",
+            farmTitle: "도심 속 힐링 농장 & 직거래 그린 케어",
+            farmLocation: "경기도 파주시",
+            farmerBio: "안녕하세요! 도심에서 초록빛 신선함을 기르는 윤파머입니다. 직접 키운 건강하고 무농약 채소들을 여러분의 식탁 위에 전달해 드리고 있습니다. 우당탕탕 농사 라이프와 신선한 직거래 소식을 전해드려요!",
+            profileImg: "https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?auto=format&fit=crop&w=400&q=80"
+        };
+
+        // Initial Crops List
+        const cropsData = [
+            {
+                id: 1,
+                name: "유기농 스위트 바질 50g",
+                category: "herb",
+                price: "4,500원",
+                badge: "인기/당일수확",
+                desc: "향긋함이 가득! 파스타와 바질페스토, 샐러드에 최적인 100% 무농약 스위트 바질입니다.",
+                img: "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 2,
+                name: "유기농 와일드 루꼴라 100g",
+                category: "herb",
+                price: "5,200원",
+                badge: "BEST",
+                desc: "피자와 샌드위치 풍미를 극대화해주는 쌉싸름하고 고소한 프리미엄 수제 루꼴라.",
+                img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 3,
+                name: "무농약 달콤 미니 방울토마토 1kg",
+                category: "fruit",
+                price: "12,900원",
+                badge: "고당도 수확",
+                desc: "햇살 가득 머금고 탱글탱글 실하게 영근 톡톡 터지는 초록빛 농장 토마토.",
+                img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 4,
+                name: "아삭아삭 모둠 쌈채소 500g",
+                category: "herb",
+                price: "7,800원",
+                badge: "신선특가",
+                desc: "버터헤드, 로메인, 적상추 등 당일 수확한 신선 싱싱 쌈채소 종합 모둠세트.",
+                img: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 5,
+                name: "알록달록 파프리카 4입 세트",
+                category: "fruit",
+                price: "8,500원",
+                badge: "비타민가득",
+                desc: "아삭한 식감과 달큰한 즙이 살아있는 과일같은 친환경 알록달록 미니 파프리카.",
+                img: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 6,
+                name: "[윤파머추천] 초록빛 홈파티 채소 럭키박스",
+                category: "special",
+                price: "24,000원",
+                badge: "무료배송 세트",
+                desc: "바질 + 루꼴라 + 방울토마토 + 쌈채소 구성! 아우룸 그린케어팜 스테디셀러 세트.",
+                img: "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        // Initial Farm Stories
+        const initialStories = [
+            {
+                id: 1,
+                date: "2026.10.05",
+                title: "가을 햇살 아래 스위트 바질 첫 풍년 수확!",
+                content: "오늘 아침 정성껏 키운 스위트 바질을 첫 수확했습니다. 농장에 들어서자마자 향긋한 바질 향이 온몸을 감싸네요! 아우룸 그린케어팜 스마트스토어에서 신선한 상태로 만나보세요.",
+                img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80",
+                likes: 24
+            },
+            {
+                id: 2,
+                date: "2026.09.28",
+                title: "우당탕탕! 방울토마토 가지치기하는 날",
+                content: "토마토 줄기가 어찌나 무성하게 자라는지 허리가 휠 뻔했지만, 주렁주렁 열린 붉은 열매를 보니 마음이 든든해집니다. 유기농 영양제를 듬뿍 보충해주었어요.",
+                img: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80",
+                likes: 31
+            }
+        ];
+
+        // Application State Management
+        let currentProfile = { ...defaultProfile };
+        let tempBase64Img = "";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadProfileData();
+            renderCrops('all');
+            renderStories();
+        });
+
+        // Load profile from localStorage if exists
+        function loadProfileData() {
+            try {
+                const saved = localStorage.getItem('yoon_farmer_profile');
+                if (saved) {
+                    currentProfile = JSON.parse(saved);
+                }
+            } catch (e) {
+                console.warn('LocalStorage error, using default profile', e);
+            }
+            updateProfileUI();
+        }
+
+        // Update main page profile view
+        function updateProfileUI() {
+            document.getElementById('display-farmer-name').innerText = currentProfile.farmerName;
+            document.getElementById('display-farm-title').innerText = currentProfile.farmTitle;
+            document.getElementById('display-farm-location').innerText = currentProfile.farmLocation;
+            document.getElementById('display-farmer-bio').innerText = currentProfile.farmerBio;
+            
+            if (currentProfile.profileImg) {
+                document.getElementById('display-profile-img').src = currentProfile.profileImg;
+            }
+        }
+
+        // Open Admin Profile Modal
+        function openAdminModal() {
+            document.getElementById('admin-farmer-name').value = currentProfile.farmerName;
+            document.getElementById('admin-farm-title').value = currentProfile.farmTitle;
+            document.getElementById('admin-farm-location').value = currentProfile.farmLocation;
+            document.getElementById('admin-farmer-bio').value = currentProfile.farmerBio;
+            document.getElementById('admin-preview-img').src = currentProfile.profileImg;
+            document.getElementById('admin-img-url').value = currentProfile.profileImg.startsWith('data:') ? '' : currentProfile.profileImg;
+            
+            tempBase64Img = currentProfile.profileImg;
+            
+            const modal = document.getElementById('admin-modal');
+            modal.classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        // Handle Image File Selection & Convert to Base64
+        function previewImageFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("이미지 용량이 너무 큽니다 (5MB 이하 선택)", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                tempBase64Img = e.target.result;
+                document.getElementById('admin-preview-img').src = tempBase64Img;
+                showToast("새 사진이 선택되었습니다. [저장하기]를 누르세요!", "info");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Handle Image URL Input
+        function updatePreviewFromUrl(url) {
+            if (url.trim()) {
+                tempBase64Img = url.trim();
+                document.getElementById('admin-preview-img').src = tempBase64Img;
+            }
+        }
+
+        // Save Profile Action
+        function handleSaveProfile(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('admin-farmer-name').value.trim();
+            const title = document.getElementById('admin-farm-title').value.trim();
+            const location = document.getElementById('admin-farm-location').value.trim();
+            const bio = document.getElementById('admin-farmer-bio').value.trim();
+
+            currentProfile = {
+                farmerName: name,
+                farmTitle: title,
+                farmLocation: location,
+                farmerBio: bio,
+                profileImg: tempBase64Img || currentProfile.profileImg
+            };
+
+            // Save to LocalStorage
+            try {
+                localStorage.setItem('yoon_farmer_profile', JSON.stringify(currentProfile));
+            } catch (e) {
+                console.error("Failed to save to local storage", e);
+            }
+
+            // Sync UI
+            updateProfileUI();
+            closeAdminModal();
+            showToast("프로필과 사진이 성공적으로 저장되었습니다! 🌱", "success");
+        }
+
+        // Render Produce Market Items
+        function renderCrops(categoryFilter = 'all') {
+            const grid = document.getElementById('crops-grid');
+            grid.innerHTML = '';
+
+            const filtered = categoryFilter === 'all' 
+                ? cropsData 
+                : cropsData.filter(item => item.category === categoryFilter);
+
+            filtered.forEach(crop => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl overflow-hidden border border-emerald-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group";
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Crop Image Box -->
+                        <div class="relative h-48 overflow-hidden bg-emerald-50">
+                            <img src="${crop.img}" alt="${crop.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-farm-800 text-[11px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+                                ${crop.badge}
+                            </span>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-5 space-y-2">
+                            <h4 class="font-bold text-gray-900 text-base group-hover:text-farm-600 transition-colors">${crop.name}</h4>
+                            <p class="text-xs text-gray-500 line-clamp-2 leading-relaxed">${crop.desc}</p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Bar & SmartStore Action -->
+                    <div class="p-5 pt-0 space-y-3">
+                        <div class="flex items-center justify-between border-t border-gray-100 pt-3">
+                            <span class="text-xs text-gray-400 font-medium">네이버 직거래가</span>
+                            <span class="text-lg font-black text-farm-700">${crop.price}</span>
+                        </div>
+
+                        <!-- Direct SmartStore Direct Buy Button -->
+                        <div class="grid grid-cols-5 gap-2">
+                            <button onclick="openCropModal(${crop.id})" class="col-span-2 bg-emerald-50 hover:bg-emerald-100 text-farm-800 font-bold text-xs py-2.5 rounded-xl transition-all">
+                                상세보기
+                            </button>
+                            <a href="${SMARTSTORE_URL}" target="_blank" rel="noopener noreferrer" 
+                               class="col-span-3 smartstore-gradient hover:brightness-105 text-white font-bold text-xs py-2.5 rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-1">
+                                <span class="bg-white text-naver px-1 rounded text-[9px] font-black">N</span>
+                                <span>스마트스토어 구매</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Category Filter Switching
+        function filterCrops(cat) {
+            document.querySelectorAll('.crop-filter').forEach(btn => {
+                btn.classList.remove('bg-farm-600', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-600');
+            });
+
+            event.target.classList.remove('bg-white', 'text-gray-600');
+            event.target.classList.add('bg-farm-600', 'text-white');
+
+            renderCrops(cat);
+        }
+
+        function openCropModal(id) {
+            const crop = cropsData.find(item => item.id === id);
+            if (!crop) return;
+
+            document.getElementById('crop-modal-img').src = crop.img;
+            document.getElementById('crop-modal-title').innerText = crop.name;
+            document.getElementById('crop-modal-desc').innerText = crop.desc;
+            document.getElementById('crop-modal-price').innerText = crop.price;
+            document.getElementById('crop-modal-badge').innerText = crop.badge;
+
+            document.getElementById('crop-modal').classList.remove('hidden');
+        }
+
+        function closeCropModal() {
+            document.getElementById('crop-modal').classList.add('hidden');
+        }
+
+        function renderStories() {
+            const container = document.getElementById('journal-posts');
+            container.innerHTML = '';
+
+            initialStories.forEach(post => {
+                const article = document.createElement('article');
+                article.className = "bg-white rounded-3xl p-5 border border-emerald-100 shadow-sm flex flex-col sm:flex-row gap-4 items-start";
+                
+                article.innerHTML = `
+                    <div class="w-full sm:w-36 h-36 rounded-2xl overflow-hidden bg-emerald-50 flex-shrink-0">
+                        <img src="${post.img}" alt="${post.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow space-y-2">
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <span>${post.date}</span>
+                            <span class="text-farm-600 font-medium"><i class="fa-solid fa-heart mr-1"></i>${post.likes}</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 text-sm sm:text-base">${post.title}</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed">${post.content}</p>
+                    </div>
+                `;
+                container.appendChild(article);
+            });
+        }
+
+        function openBlogModal() {
+            showToast("영농일기 작성 모듈 준비 중입니다. 먼저 프로필 및 작물을 확인해보세요!", "info");
+        }
+
+        function showSection(sectionId) {
+            if (sectionId === 'market') {
+                document.getElementById('section-market').scrollIntoView({ behavior: 'smooth' });
+            } else if (sectionId === 'story') {
+                document.getElementById('section-story').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Toast Helper
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+
+            if (type === 'error') {
+                toastIcon.className = "fa-solid fa-triangle-exclamation text-red-400 text-lg";
+            } else if (type === 'info') {
+                toastIcon.className = "fa-solid fa-circle-info text-blue-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-check text-farm-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
